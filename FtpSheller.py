@@ -1,4 +1,24 @@
+#/usr/bin/env python
+__author__ = 'Cowonaboat'
+
+
 import ftplib, sys, time, subprocess, socket, argparse
+
+'''
+This script will check if anonymous login is enabled, and if it is it'll
+try to upload a payload. It'll then trigger the payload and return the shell
+
+It's specifically made for the HTB box Devel from www.hackthebox.eu
+
+####### TODO: ################
+   1. Include nc1 listener in this script and do multithreading
+   2. Automate msfvenom creation and add support for asp and php
+   3. Finish the tun0/eth0 subprocess thingy.. perhaps
+   4. Make ReadMe
+   5. Clean up this mess
+
+
+'''
 
 class Attack(object):
     def __init__(self, rhost):
