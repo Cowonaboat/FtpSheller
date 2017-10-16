@@ -3,7 +3,6 @@ __author__ = 'Cowonaboat'
 
 
 import ftplib
-import string
 import sys
 import time
 import subprocess
@@ -22,6 +21,7 @@ It's specifically made for the HTB box Devel from www.hackthebox.eu
 ####### TODO: ################
    1. Include nc listener in this script and do multithreading instead of calling it
    2. Clean up this mess
+   3. Add priv esc exploit 
 
 '''
 
